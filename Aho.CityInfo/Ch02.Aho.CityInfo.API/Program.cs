@@ -16,10 +16,36 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
-app.UseAuthorization();
+//app.UseAuthorization();
 
-app.MapControllers();
+//app.MapControllers();
+
+app.Use(async (context, next) =>
+{
+    context.Response.WriteAsync("01. Outbound\n");
+    await next(context);
+    context.Response.WriteAsync("01. Return\n");
+});
+
+app.Use(async (context, next) =>
+{
+    context.Response.WriteAsync("02. Outbound\n");
+    await next(context);
+    context.Response.WriteAsync("02. Return\n");
+});
+
+app.Use(async (context, next) =>
+{
+    context.Response.WriteAsync("03. Outbound\n");
+    await next(context);
+    context.Response.WriteAsync("03. Return\n");
+});
+
+app.Run(async context =>
+{
+    context.Response.WriteAsync("-> X. Bullseye!\n");
+});
 
 app.Run();
