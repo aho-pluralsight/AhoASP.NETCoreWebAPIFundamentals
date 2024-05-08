@@ -3,6 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01.APIs", "01.APIs", "{368D0BB6-1D8A-4D53-BC9C-984357E99AE9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ch02.Aho.CityInfo.API", "Ch02.Aho.CityInfo.API\Ch02.Aho.CityInfo.API.csproj", "{AC2094C9-BF0A-4CAB-A199-BE08A45C80D5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -10,5 +14,14 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AC2094C9-BF0A-4CAB-A199-BE08A45C80D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC2094C9-BF0A-4CAB-A199-BE08A45C80D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC2094C9-BF0A-4CAB-A199-BE08A45C80D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC2094C9-BF0A-4CAB-A199-BE08A45C80D5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AC2094C9-BF0A-4CAB-A199-BE08A45C80D5} = {368D0BB6-1D8A-4D53-BC9C-984357E99AE9}
 	EndGlobalSection
 EndGlobal
