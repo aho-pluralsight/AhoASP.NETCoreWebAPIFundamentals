@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Ch03.Aho.CityInfo.API.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Ch03.Aho.CityInfo.API.Controllers
 {
@@ -7,15 +9,22 @@ namespace Ch03.Aho.CityInfo.API.Controllers
     public class CitiesController : ControllerBase
     {
         [HttpGet]
-        public JsonResult GetCities()
+        public ActionResult<IEnumerable<CityDto>> GetCities()
         {
-            return new JsonResult(CitiesDataStore.Instance.Cities);
+            return Ok(CitiesDataStore.Instance.Cities);
         }
 
         [HttpGet("{id}")]
-        public JsonResult GetCity(int id)
+        public ActionResult<CityDto> GetCity(int id)
         {
-            return new JsonResult(CitiesDataStore.Instance.Cities.FirstOrDefault(city => city.Id == id));
+            var city = CitiesDataStore.Instance.Cities.FirstOrDefault(city => city.Id == id);
+
+            if (city == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(city);
         }
     }
 }
