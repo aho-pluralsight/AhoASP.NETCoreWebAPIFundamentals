@@ -6,6 +6,7 @@ namespace Ch03.Aho.CityInfo.API.Controllers
 {
     //[Route("api/[controller]")]
     [Route("api/cities")]
+    [ApiController]
     public class CitiesController : ControllerBase
     {
         [HttpGet]
