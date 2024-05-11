@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Net.Http.Headers;
 
 namespace Ch03.Aho.CityInfo.API.Controllers
 {
@@ -10,11 +9,13 @@ namespace Ch03.Aho.CityInfo.API.Controllers
         [HttpGet]
         public JsonResult GetCities()
         {
-            return new JsonResult(new List<object>
-            {
-                new { Id = 1, Name = "New York City" },
-                new { Id = 2, Name = "Lyon" }
-            });
+            return new JsonResult(CitiesDataStore.Instance.Cities);
+        }
+
+        [HttpGet("{id}")]
+        public JsonResult GetCity(int id)
+        {
+            return new JsonResult(CitiesDataStore.Instance.Cities.FirstOrDefault(city => city.Id == id));
         }
     }
 }
