@@ -1,0 +1,45 @@
+﻿
+.element {
+    padding-left: 30px;
+    border-left: solid coral;
+    border-width: thin;
+}
+
+.box-00, #paveDansLaMare {
+    margin: auto;
+    border: double black;
+    border-width: 3px;
+    width: 50%;
+}
+
+#paveDansLaMare {
+    padding: 0 0 0 30px;
+}
+
+.title {
+    padding-right: 30px;
+    text-align: center;
+    font-family: 'Lucida Console';
+}
+
+.displayTag {
+    margin: 0;
+    font-family: 'Lucida Console';
+}
+
+.outbound {
+    padding: 20px 0 0 0;
+}
+
+.return {
+    padding: 0 0 20px 0;
+}
+
+.bullseye {
+    padding: 20px 0 20px 0;
+}
+
+mark {
+    background-color: black;
+    color: yellow;
+}
