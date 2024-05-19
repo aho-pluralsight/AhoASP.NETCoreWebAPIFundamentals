@@ -18,7 +18,7 @@ builder.Services.AddControllers(options =>
     {
         TypeInfoResolver = new DefaultJsonTypeInfoResolver()
     }));
-});
+}).AddNewtonsoftJson();
 
 builder.Services.AddProblemDetails(options =>
  {
