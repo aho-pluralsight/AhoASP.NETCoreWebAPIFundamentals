@@ -1,5 +1,6 @@
 ﻿using Ch03.Aho.CityInfo.API.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ch03.Aho.CityInfo.API.Controllers
@@ -75,6 +76,44 @@ namespace Ch03.Aho.CityInfo.API.Controllers
 
             oldPointOfInterest.Name = updatePointOfInterest.Name;
             oldPointOfInterest.Description = updatePointOfInterest.Description;
+
+            return NoContent();
+        }
+
+        [HttpPatch("{pointId}")]
+        public ActionResult PartialUpdatePointOfInterest(int cityId, int pointId, JsonPatchDocument<PointOfInterestForUpdateDto> patchDocument)
+        {
+            var city = CitiesDataStore.Instance.Cities.FirstOrDefault(c => c.Id == cityId);
+            if (city == null)
+            {
+                return NotFound();
+            }
+
+            var storedPointOfInterest = city.PointsOfInterest.FirstOrDefault(p => p.Id == pointId);
+            if (storedPointOfInterest == null)
+            {
+                return NotFound();
+            }
+
+            var patchPointOfInterest = new PointOfInterestForUpdateDto()
+            {
+                Name = storedPointOfInterest.Name,
+                Description = storedPointOfInterest.Description
+            };
+            patchDocument.ApplyTo(patchPointOfInterest, ModelState);
+            if (ModelState.IsValid == false)
+            {
+                return BadRequest(ModelState);
+            }
+
+            TryValidateModel(patchPointOfInterest);
+            if (ModelState.IsValid == false)
+            {
+                return BadRequest(ModelState);
+            }
+
+            storedPointOfInterest.Name = patchPointOfInterest.Name;
+            storedPointOfInterest.Description = patchPointOfInterest.Description;
 
             return NoContent();
         }
