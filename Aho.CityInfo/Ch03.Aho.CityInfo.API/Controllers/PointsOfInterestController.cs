@@ -57,5 +57,26 @@ namespace Ch03.Aho.CityInfo.API.Controllers
 
             return CreatedAtRoute(MethodGetPointOfInterest, new { cityId = city.Id, pointId = newPointOfInterest.Id }, newPointOfInterest);
         }
+
+        [HttpPut("{pointId}")]
+        public ActionResult UpdatePointOfInterest(int cityId, int pointId, PointOfInterestForUpdateDto updatePointOfInterest)
+        {
+            var city = CitiesDataStore.Instance.Cities.FirstOrDefault(ci => ci.Id == cityId);
+            if (city == null)
+            {
+                return NotFound();
+            }
+
+            var oldPointOfInterest = city.PointsOfInterest.FirstOrDefault(pi => pi.Id == pointId);
+            if (oldPointOfInterest == null)
+            {
+                return NotFound();
+            }
+
+            oldPointOfInterest.Name = updatePointOfInterest.Name;
+            oldPointOfInterest.Description = updatePointOfInterest.Description;
+
+            return NoContent();
+        }
     }
 }
