@@ -117,5 +117,25 @@ namespace Ch03.Aho.CityInfo.API.Controllers
 
             return NoContent();
         }
+
+        [HttpDelete("{pointId}")]
+        public ActionResult DeletePointOfInterest(int cityId, int pointId)
+        {
+            var city = CitiesDataStore.Instance.Cities.FirstOrDefault(ci => ci.Id == cityId);
+            if (city == null)
+            {
+                return NotFound();
+            }
+
+            var point = city.PointsOfInterest.FirstOrDefault(pi => pi.Id == pointId);
+            if (point == null)
+            {
+                return NotFound();
+            }
+
+            city.PointsOfInterest.Remove(point);
+
+            return NoContent();
+        }
     }
 }
