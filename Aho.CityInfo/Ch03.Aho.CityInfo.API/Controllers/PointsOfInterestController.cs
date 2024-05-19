@@ -38,7 +38,7 @@ namespace Ch03.Aho.CityInfo.API.Controllers
         }
 
         [HttpPost]
-        public ActionResult<PointOfInterestDto> CreatePointOfInterest(int cityId, PointOfInterestForCreationDto pointOfInterestForCreation)
+        public ActionResult<PointOfInterestDto> CreatePointOfInterest(int cityId, PointOfInterestForCreateDto pointOfInterestForCreation)
         {
             var city = CitiesDataStore.Instance.Cities.FirstOrDefault<CityDto>(ci => ci.Id == cityId);
             if (city == null)
