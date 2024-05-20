@@ -3,6 +3,11 @@
 ##
 ## Get latest from `dotnet new gitignore`
 
+# Aho.CityInfo specific:
+# **********************
+Aho.CityInfo/Ch03.Aho.CityInfo.API/content/upload
+# **********************
+
 # dotenv files
 .env
 

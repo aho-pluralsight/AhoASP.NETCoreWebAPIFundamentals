@@ -18,6 +18,7 @@ namespace Ch03.Aho.CityInfo.API.Controllers
             _fileExtensionContentTypeProvider = fileExtensionContentTypeProvider ?? throw new ArgumentNullException(nameof(fileExtensionContentTypeProvider));
         }
 
+        #region API Methods
         [HttpGet("{id}")]
         public ActionResult GetFile(int id)
         {
@@ -37,9 +38,29 @@ namespace Ch03.Aho.CityInfo.API.Controllers
             return File(fileBytes, fileContentType, file);
         }
 
+        [HttpPost]
+        public async Task<ActionResult> UploadFile(IFormFile file)
+        {
+            if (file.Length == 0 || file.Length > 20971520 || file.ContentType != "application/pdf")
+            {
+                return BadRequest("Missing or invalid file.");
+            }
+
+            var path = Path.Combine(Directory.GetCurrentDirectory(), @"content/upload", $"Ch04.Aho.CityInfo.API.{DateTime.Now.ToString("yyyyMMdd.hhmmss.fff")}.pdf");
+            using (var stream = new FileStream(path, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            return Ok("File uploaded and saved successfully!");
+        }
+        #endregion
+
+        #region Private Methods
         private string? GetLocalFile(int id)
         {
             return Directory.GetFiles(_fileLocation).FirstOrDefault(fi => Path.GetFileName(fi).StartsWith($"{_fileNamePattern}{id.ToString("00")}"));
         }
+        #endregion
     }
 }
