@@ -9,8 +9,9 @@ namespace Ch03.Aho.CityInfo.API.Controllers
     [ApiController]
     public class FilesController : ControllerBase
     {
-        private readonly string _fileNamePattern = "Ch03.Aho.CityInfo.API.";
-        private readonly string _fileLocation = "content\\download";
+        private readonly string _fileNamePrefix = "Ch03.Aho.CityInfo.API.";
+        private readonly string _download = @"content\download";
+        private readonly string _upload = @"content\upload";
         private FileExtensionContentTypeProvider _fileExtensionContentTypeProvider;
 
         public FilesController(FileExtensionContentTypeProvider fileExtensionContentTypeProvider)
@@ -46,20 +47,20 @@ namespace Ch03.Aho.CityInfo.API.Controllers
                 return BadRequest("Missing or invalid file.");
             }
 
-            var path = Path.Combine(Directory.GetCurrentDirectory(), @"content/upload", $"Ch04.Aho.CityInfo.API.{DateTime.Now.ToString("yyyyMMdd.hhmmss.fff")}.pdf");
+            var path = Path.Combine(Directory.GetCurrentDirectory(), _upload, $"Ch04.Aho.CityInfo.API.{DateTime.Now.ToString("yyyyMMdd.hhmmss.fff")}.pdf");
             using (var stream = new FileStream(path, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
             }
 
-            return Ok("File uploaded and saved successfully!");
+            return Ok($"File uploaded and saved successfully to: {Path.Combine(Directory.GetCurrentDirectory(), _upload)}");
         }
         #endregion
 
         #region Private Methods
         private string? GetLocalFile(int id)
         {
-            return Directory.GetFiles(_fileLocation).FirstOrDefault(fi => Path.GetFileName(fi).StartsWith($"{_fileNamePattern}{id.ToString("00")}"));
+            return Directory.GetFiles(_download).FirstOrDefault(fi => Path.GetFileName(fi).StartsWith($"{_fileNamePrefix}{id.ToString("00")}"));
         }
         #endregion
     }
