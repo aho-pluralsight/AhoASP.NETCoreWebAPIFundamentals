@@ -12,10 +12,12 @@ namespace Ch03.Aho.CityInfo.API.Controllers
     {
         private const string MethodGetPointOfInterest = "GetPointOfInterest";
         private readonly ILogger<PointsOfInterestController> _logger;
-        private readonly SimpleNotificationService _notificationService;
-        public PointsOfInterestController(ILogger<PointsOfInterestController> logger, SimpleNotificationService notificationService)
+        private readonly SimpleNotificationService _simpleNotificationService;
+        private readonly INotificationService _notificationService;
+        public PointsOfInterestController(ILogger<PointsOfInterestController> logger, SimpleNotificationService simpleNotificationService, INotificationService notificationService)
         {
             _logger = logger;
+            _simpleNotificationService = simpleNotificationService ?? throw new ArgumentNullException();
             _notificationService = notificationService ?? throw new ArgumentNullException();
         }
 
@@ -70,7 +72,7 @@ namespace Ch03.Aho.CityInfo.API.Controllers
             };
             city.PointsOfInterest.Add(newPointOfInterest);
 
-            _notificationService.Notify("Point of interest created.", $"Point of interest '{newPointOfInterest.Name}' with the id '{newPointOfInterest.Id}' is created.");
+            _simpleNotificationService.Notify("Point of interest created.", $"Point of interest '{newPointOfInterest.Name}' with the id '{newPointOfInterest.Id}' is created.");
 
             return CreatedAtRoute(MethodGetPointOfInterest, new { cityId = city.Id, pointId = newPointOfInterest.Id }, newPointOfInterest);
         }
@@ -92,6 +94,8 @@ namespace Ch03.Aho.CityInfo.API.Controllers
 
             oldPointOfInterest.Name = updatePointOfInterest.Name;
             oldPointOfInterest.Description = updatePointOfInterest.Description;
+
+            _notificationService.Notify("Point of interest created.", $"Point of interest '{oldPointOfInterest.Name}' with the id '{oldPointOfInterest.Id}' was updated.");
 
             return NoContent();
         }

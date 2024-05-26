@@ -47,6 +47,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
 builder.Services.AddTransient<SimpleNotificationService>();
+builder.Services.AddTransient<INotificationService, FancyNotificationService>();
 
 var app = builder.Build();
 
