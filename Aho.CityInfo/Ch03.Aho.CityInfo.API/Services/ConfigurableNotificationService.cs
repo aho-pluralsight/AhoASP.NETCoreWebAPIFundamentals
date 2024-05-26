@@ -21,7 +21,11 @@
         public void Notify(string subject, string note)
         {
             Console.ForegroundColor = ConsoleColor.Magenta;
-            Console.WriteLine($"Note from {_noteFrom} to {_noteTo}, with {this.GetType().Name}");
+            Console.Write($"Note from {_noteFrom} to ");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write($"{_noteTo}");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($", with {this.GetType().Name}");
             Console.WriteLine($"Subject: {subject}");
             Console.WriteLine($"Note: {note}");
             Console.ResetColor();
