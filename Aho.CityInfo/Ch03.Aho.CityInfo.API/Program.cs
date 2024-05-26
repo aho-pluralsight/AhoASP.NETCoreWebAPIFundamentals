@@ -1,12 +1,22 @@
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.StaticFiles;
+using Serilog;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
+
+//[AHO] configuring Serilog
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .WriteTo.Console()
+    .WriteTo.File("logs/cityinfologs.txt", rollingInterval: RollingInterval.Hour)
+    .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
 //[AHO] clear default providers
 builder.Logging.ClearProviders();
-builder.Logging.AddConsole();
+//builder.Logging.AddConsole();
+//[AHO] register Serilog logger
+builder.Host.UseSerilog();
 
 // Add services to the container.
 
