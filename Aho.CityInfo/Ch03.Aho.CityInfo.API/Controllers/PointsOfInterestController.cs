@@ -19,6 +19,11 @@ namespace Ch03.Aho.CityInfo.API.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<PointOfInterestDto>> GetPointsOfInterest(int cityId)
         {
+            if (cityId == 0)
+            {
+                throw new Exception("Simulated-nasty-not-handled exception!");
+            }
+
             var city = CitiesDataStore.Instance.Cities.FirstOrDefault(city => city.Id == cityId);
             if (city == null)
             {
