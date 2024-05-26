@@ -1,3 +1,4 @@
+using Ch03.Aho.CityInfo.API.Services;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.StaticFiles;
 using Serilog;
@@ -45,6 +46,7 @@ builder.Services.AddProblemDetails(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
+builder.Services.AddTransient<SimpleNotificationService>();
 
 var app = builder.Build();
 

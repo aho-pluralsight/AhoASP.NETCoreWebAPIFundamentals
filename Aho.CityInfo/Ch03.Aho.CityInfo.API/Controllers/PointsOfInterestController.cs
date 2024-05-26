@@ -1,4 +1,5 @@
 ﻿using Ch03.Aho.CityInfo.API.Models;
+using Ch03.Aho.CityInfo.API.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -11,9 +12,11 @@ namespace Ch03.Aho.CityInfo.API.Controllers
     {
         private const string MethodGetPointOfInterest = "GetPointOfInterest";
         private readonly ILogger<PointsOfInterestController> _logger;
-        public PointsOfInterestController(ILogger<PointsOfInterestController> logger)
+        private readonly SimpleNotificationService _notificationService;
+        public PointsOfInterestController(ILogger<PointsOfInterestController> logger, SimpleNotificationService notificationService)
         {
             _logger = logger;
+            _notificationService = notificationService ?? throw new ArgumentNullException();
         }
 
         [HttpGet]
@@ -66,6 +69,8 @@ namespace Ch03.Aho.CityInfo.API.Controllers
                 Description = pointOfInterestForCreation.Description
             };
             city.PointsOfInterest.Add(newPointOfInterest);
+
+            _notificationService.Notify("Point of interest created.", $"Point of interest '{newPointOfInterest.Name}' with the id '{newPointOfInterest.Id}' is created.");
 
             return CreatedAtRoute(MethodGetPointOfInterest, new { cityId = city.Id, pointId = newPointOfInterest.Id }, newPointOfInterest);
         }
