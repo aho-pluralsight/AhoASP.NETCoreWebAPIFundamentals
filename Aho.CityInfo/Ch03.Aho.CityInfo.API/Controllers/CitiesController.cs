@@ -10,16 +10,18 @@ namespace Ch03.Aho.CityInfo.API.Controllers
     public class CitiesController : ControllerBase
     {
         private readonly ILogger<CitiesController> _logger;
+        private readonly CitiesDataStore _citiesDataStore;
 
-        public CitiesController(ILogger<CitiesController> logger)
+        public CitiesController(ILogger<CitiesController> logger, CitiesDataStore citiesDataStore)
         {
-            this._logger = logger;
+            this._logger = logger ?? throw new ArgumentNullException();
+            _citiesDataStore = citiesDataStore ?? throw new ArgumentNullException() ;
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<CityDto>> GetCities()
         {
-            return Ok(CitiesDataStore.Instance.Cities);
+            return Ok(_citiesDataStore.Cities);
         }
 
         [HttpGet("{id}")]
@@ -32,7 +34,7 @@ namespace Ch03.Aho.CityInfo.API.Controllers
                     throw new ArgumentException("This is nasty yo!");
                 }
 
-                var city = CitiesDataStore.Instance.Cities.FirstOrDefault(city => city.Id == id);
+                var city = _citiesDataStore.Cities.FirstOrDefault(city => city.Id == id);
 
                 if (city == null)
                 {

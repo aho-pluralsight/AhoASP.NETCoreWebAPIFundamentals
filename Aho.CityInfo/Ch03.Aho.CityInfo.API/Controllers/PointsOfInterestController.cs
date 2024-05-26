@@ -1,6 +1,5 @@
 ﻿using Ch03.Aho.CityInfo.API.Models;
 using Ch03.Aho.CityInfo.API.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,11 +13,13 @@ namespace Ch03.Aho.CityInfo.API.Controllers
         private readonly ILogger<PointsOfInterestController> _logger;
         private readonly SimpleNotificationService _simpleNotificationService;
         private readonly INotificationService _notificationService;
-        public PointsOfInterestController(ILogger<PointsOfInterestController> logger, SimpleNotificationService simpleNotificationService, INotificationService notificationService)
+        private readonly CitiesDataStore _citiesDataStore;
+        public PointsOfInterestController(ILogger<PointsOfInterestController> logger, SimpleNotificationService simpleNotificationService, INotificationService notificationService, CitiesDataStore citiesDataStore)
         {
-            _logger = logger;
+            _logger = logger ?? throw new ArgumentNullException();
             _simpleNotificationService = simpleNotificationService ?? throw new ArgumentNullException();
             _notificationService = notificationService ?? throw new ArgumentNullException();
+            _citiesDataStore = citiesDataStore ?? throw new ArgumentNullException();
         }
 
         [HttpGet]
@@ -29,7 +30,7 @@ namespace Ch03.Aho.CityInfo.API.Controllers
                 throw new Exception("Simulated-nasty-not-handled exception!");
             }
 
-            var city = CitiesDataStore.Instance.Cities.FirstOrDefault(city => city.Id == cityId);
+            var city = _citiesDataStore.Cities.FirstOrDefault(city => city.Id == cityId);
             if (city == null)
             {
                 return NotFound();
@@ -40,7 +41,7 @@ namespace Ch03.Aho.CityInfo.API.Controllers
         [HttpGet("{pointId}", Name = MethodGetPointOfInterest)]
         public ActionResult<PointOfInterestDto> GetPointOfInterest(int cityId, int pointId)
         {
-            var city = CitiesDataStore.Instance.Cities.FirstOrDefault(city => city.Id == cityId);
+            var city = _citiesDataStore.Cities.FirstOrDefault(city => city.Id == cityId);
             if (city == null)
             {
                 _logger.LogDebug($"The city with the id = {cityId} was not found when trying to get the point of interest with the id = {pointId}.");
@@ -57,13 +58,13 @@ namespace Ch03.Aho.CityInfo.API.Controllers
         [HttpPost]
         public ActionResult<PointOfInterestDto> CreatePointOfInterest(int cityId, PointOfInterestForCreateDto pointOfInterestForCreation)
         {
-            var city = CitiesDataStore.Instance.Cities.FirstOrDefault<CityDto>(ci => ci.Id == cityId);
+            var city = _citiesDataStore.Cities.FirstOrDefault<CityDto>(ci => ci.Id == cityId);
             if (city == null)
             {
                 return NotFound();
             }
 
-            var maxPointOfIntId = CitiesDataStore.Instance.Cities.SelectMany(ci => ci.PointsOfInterest).Max(pi => pi.Id);
+            var maxPointOfIntId = _citiesDataStore.Cities.SelectMany(ci => ci.PointsOfInterest).Max(pi => pi.Id);
             var newPointOfInterest = new PointOfInterestDto()
             {
                 Id = ++maxPointOfIntId,
@@ -80,7 +81,7 @@ namespace Ch03.Aho.CityInfo.API.Controllers
         [HttpPut("{pointId}")]
         public ActionResult UpdatePointOfInterest(int cityId, int pointId, PointOfInterestForUpdateDto updatePointOfInterest)
         {
-            var city = CitiesDataStore.Instance.Cities.FirstOrDefault(ci => ci.Id == cityId);
+            var city = _citiesDataStore.Cities.FirstOrDefault(ci => ci.Id == cityId);
             if (city == null)
             {
                 return NotFound();
@@ -103,7 +104,7 @@ namespace Ch03.Aho.CityInfo.API.Controllers
         [HttpPatch("{pointId}")]
         public ActionResult PartialUpdatePointOfInterest(int cityId, int pointId, JsonPatchDocument<PointOfInterestForUpdateDto> patchDocument)
         {
-            var city = CitiesDataStore.Instance.Cities.FirstOrDefault(c => c.Id == cityId);
+            var city = _citiesDataStore.Cities.FirstOrDefault(c => c.Id == cityId);
             if (city == null)
             {
                 return NotFound();
@@ -141,7 +142,7 @@ namespace Ch03.Aho.CityInfo.API.Controllers
         [HttpDelete("{pointId}")]
         public ActionResult DeletePointOfInterest(int cityId, int pointId)
         {
-            var city = CitiesDataStore.Instance.Cities.FirstOrDefault(ci => ci.Id == cityId);
+            var city = _citiesDataStore.Cities.FirstOrDefault(ci => ci.Id == cityId);
             if (city == null)
             {
                 return NotFound();

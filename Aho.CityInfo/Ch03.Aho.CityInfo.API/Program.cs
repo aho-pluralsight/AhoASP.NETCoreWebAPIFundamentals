@@ -1,3 +1,4 @@
+using Ch03.Aho.CityInfo.API;
 using Ch03.Aho.CityInfo.API.Services;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.StaticFiles;
@@ -48,6 +49,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
 builder.Services.AddTransient<SimpleNotificationService>();
 builder.Services.AddTransient<INotificationService, FancyNotificationService>();
+builder.Services.AddSingleton<CitiesDataStore>();
 
 var app = builder.Build();
 
