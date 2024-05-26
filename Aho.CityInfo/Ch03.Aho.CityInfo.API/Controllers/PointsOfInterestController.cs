@@ -10,6 +10,11 @@ namespace Ch03.Aho.CityInfo.API.Controllers
     public class PointsOfInterestController : ControllerBase
     {
         private const string MethodGetPointOfInterest = "GetPointOfInterest";
+        private readonly ILogger<PointsOfInterestController> _logger;
+        public PointsOfInterestController(ILogger<PointsOfInterestController> logger)
+        {
+            _logger = logger;
+        }
 
         [HttpGet]
         public ActionResult<IEnumerable<PointOfInterestDto>> GetPointsOfInterest(int cityId)
@@ -28,6 +33,7 @@ namespace Ch03.Aho.CityInfo.API.Controllers
             var city = CitiesDataStore.Instance.Cities.FirstOrDefault(city => city.Id == cityId);
             if (city == null)
             {
+                _logger.LogDebug($"The city with the id = {cityId} was not found when trying to get the point of interest with the id = {pointId}.");
                 return NotFound();
             }
             var pointOfInterest = city.PointsOfInterest.FirstOrDefault(point => point.Id == pointId);
