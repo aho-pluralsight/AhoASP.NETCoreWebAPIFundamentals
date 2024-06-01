@@ -11,14 +11,20 @@ namespace Ch03.Aho.CityInfo.API.Controllers
     {
         private const string MethodGetPointOfInterest = "GetPointOfInterest";
         private readonly ILogger<PointsOfInterestController> _logger;
-        private readonly SimpleNotificationService _simpleNotificationService;
-        private readonly INotificationService _notificationService;
+        private readonly SimpleNotificationService _notificationServiceSimple;
+        private readonly INotificationService _notificationServiceFancy;
+        private readonly INotificationService _notificationServiceConfig;
         private readonly CitiesDataStore _citiesDataStore;
-        public PointsOfInterestController(ILogger<PointsOfInterestController> logger, SimpleNotificationService simpleNotificationService, INotificationService notificationService, CitiesDataStore citiesDataStore)
+        public PointsOfInterestController(ILogger<PointsOfInterestController> logger, 
+            SimpleNotificationService notificationServiceSimple, 
+            [FromKeyedServices("notifFancy")] INotificationService notificationServiceFancy, 
+            [FromKeyedServices("notifConfig")] INotificationService notificationServiceConfig,
+            CitiesDataStore citiesDataStore)
         {
             _logger = logger ?? throw new ArgumentNullException();
-            _simpleNotificationService = simpleNotificationService ?? throw new ArgumentNullException();
-            _notificationService = notificationService ?? throw new ArgumentNullException();
+            _notificationServiceSimple = notificationServiceSimple ?? throw new ArgumentNullException();
+            _notificationServiceFancy = notificationServiceFancy ?? throw new ArgumentNullException();
+            _notificationServiceConfig = notificationServiceConfig ?? throw new ArgumentNullException();
             _citiesDataStore = citiesDataStore ?? throw new ArgumentNullException();
         }
 
@@ -73,7 +79,7 @@ namespace Ch03.Aho.CityInfo.API.Controllers
             };
             city.PointsOfInterest.Add(newPointOfInterest);
 
-            _simpleNotificationService.Notify("Point of interest created.", $"Point of interest '{newPointOfInterest.Name}' with the id '{newPointOfInterest.Id}' is created.");
+            _notificationServiceSimple.Notify("Point of interest created.", $"Point of interest '{newPointOfInterest.Name}' with the id '{newPointOfInterest.Id}' is created.");
 
             return CreatedAtRoute(MethodGetPointOfInterest, new { cityId = city.Id, pointId = newPointOfInterest.Id }, newPointOfInterest);
         }
@@ -96,7 +102,7 @@ namespace Ch03.Aho.CityInfo.API.Controllers
             oldPointOfInterest.Name = updatePointOfInterest.Name;
             oldPointOfInterest.Description = updatePointOfInterest.Description;
 
-            _notificationService.Notify("Point of interest created.", $"Point of interest '{oldPointOfInterest.Name}' with the id '{oldPointOfInterest.Id}' was updated.");
+            _notificationServiceFancy.Notify("Point of interest created.", $"Point of interest '{oldPointOfInterest.Name}' with the id '{oldPointOfInterest.Id}' was updated.");
 
             return NoContent();
         }
@@ -135,6 +141,8 @@ namespace Ch03.Aho.CityInfo.API.Controllers
 
             storedPointOfInterest.Name = patchPointOfInterest.Name;
             storedPointOfInterest.Description = patchPointOfInterest.Description;
+
+            _notificationServiceConfig.Notify("Point of interest patched.", $"Point of interest '{storedPointOfInterest.Name}' with the id '{storedPointOfInterest.Id}' was successfully patched.");
 
             return NoContent();
         }

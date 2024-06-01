@@ -49,7 +49,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
 builder.Services.AddTransient<SimpleNotificationService>();
 //builder.Services.AddTransient<INotificationService, FancyNotificationService>();
-builder.Services.AddTransient<INotificationService, ConfigurableNotificationService>();
+//builder.Services.AddTransient<INotificationService, ConfigurableNotificationService>();
+builder.Services.AddKeyedScoped<INotificationService, FancyNotificationService>("notifFancy");
+builder.Services.AddKeyedScoped<INotificationService, ConfigurableNotificationService>("notifConfig");
 builder.Services.AddSingleton<CitiesDataStore>();
 
 var app = builder.Build();
