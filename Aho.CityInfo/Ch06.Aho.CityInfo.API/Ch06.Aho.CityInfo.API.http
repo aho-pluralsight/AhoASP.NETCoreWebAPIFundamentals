@@ -1,0 +1,6 @@
+@Ch06.Aho.CityInfo.API_HostAddress = http://localhost:5174
+
+GET {{Ch06.Aho.CityInfo.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
