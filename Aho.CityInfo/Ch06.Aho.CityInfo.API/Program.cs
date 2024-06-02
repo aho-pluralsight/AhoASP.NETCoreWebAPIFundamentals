@@ -1,7 +1,9 @@
 using Ch06.Aho.CityInfo.API;
+using Ch06.Aho.CityInfo.API.DbContexts;
 using Ch06.Aho.CityInfo.API.Services;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
@@ -51,6 +53,9 @@ builder.Services.AddTransient<SimpleNotificationService>();
 builder.Services.AddKeyedScoped<INotificationService, FancyNotificationService>("notifFancy");
 builder.Services.AddKeyedScoped<INotificationService, ConfigurableNotificationService>("notifConfig");
 builder.Services.AddSingleton<CitiesDataStore>();
+builder.Services.AddDbContext<AhoCityInfoContext>(dbContextOptions
+    => dbContextOptions.UseSqlite("Data Source=DB\\DbAhoCityInfo.db")
+);
 
 var app = builder.Build();
 
