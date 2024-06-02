@@ -54,7 +54,7 @@ builder.Services.AddKeyedScoped<INotificationService, FancyNotificationService>(
 builder.Services.AddKeyedScoped<INotificationService, ConfigurableNotificationService>("notifConfig");
 builder.Services.AddSingleton<CitiesDataStore>();
 builder.Services.AddDbContext<AhoCityInfoContext>(dbContextOptions
-    => dbContextOptions.UseSqlite("Data Source=DB\\DbAhoCityInfo.db")
+    => dbContextOptions.UseSqlite(builder.Configuration["ConnectionStrings:AhoCityInfoDbConnectionString"])
 );
 
 var app = builder.Build();
