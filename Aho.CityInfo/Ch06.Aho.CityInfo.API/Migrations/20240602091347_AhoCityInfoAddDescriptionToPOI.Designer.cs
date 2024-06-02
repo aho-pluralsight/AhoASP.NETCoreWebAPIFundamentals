@@ -2,6 +2,7 @@
 using Ch06.Aho.CityInfo.API.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ch06.Aho.CityInfo.API.Migrations
 {
     [DbContext(typeof(AhoCityInfoContext))]
-    partial class AhoCityInfoContextModelSnapshot : ModelSnapshot
+    [Migration("20240602091347_AhoCityInfoAddDescriptionToPOI")]
+    partial class AhoCityInfoAddDescriptionToPOI
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.6");
