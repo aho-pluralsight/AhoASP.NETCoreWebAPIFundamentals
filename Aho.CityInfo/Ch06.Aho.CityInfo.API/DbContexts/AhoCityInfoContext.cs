@@ -1,4 +1,5 @@
-﻿using Ch06.Aho.CityInfo.API.Entities;
+﻿
+using Ch06.Aho.CityInfo.API.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ch06.Aho.CityInfo.API.DbContexts

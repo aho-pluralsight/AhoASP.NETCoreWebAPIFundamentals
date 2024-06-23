@@ -1,6 +1,7 @@
 using Ch06.Aho.CityInfo.API;
 using Ch06.Aho.CityInfo.API.DbContexts;
 using Ch06.Aho.CityInfo.API.Services;
+using Ch06.Aho.CityInfo.API.Services.Repository;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
@@ -56,6 +57,7 @@ builder.Services.AddSingleton<CitiesDataStore>();
 builder.Services.AddDbContext<AhoCityInfoContext>(dbContextOptions
     => dbContextOptions.UseSqlite(builder.Configuration["ConnectionStrings:AhoCityInfoDbConnectionString"])
 );
+builder.Services.AddScoped<ICityInfoRepository, CityInfoRepository>();
 
 var app = builder.Build();
 
