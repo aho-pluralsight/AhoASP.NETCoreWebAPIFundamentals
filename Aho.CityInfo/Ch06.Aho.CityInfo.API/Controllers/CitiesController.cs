@@ -1,4 +1,5 @@
-﻿using Ch06.Aho.CityInfo.API.Models;
+﻿using AutoMapper;
+using Ch06.Aho.CityInfo.API.Models;
 using Ch06.Aho.CityInfo.API.Services.Repository;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,27 +12,31 @@ namespace Ch06.Aho.CityInfo.API.Controllers
     {
         private readonly ILogger<CitiesController> _logger;
         private readonly ICityInfoRepository _cityInfoRepository;
+        private readonly IMapper _mapper;
 
-        public CitiesController(ILogger<CitiesController> logger, ICityInfoRepository cityInfoRepository)
+        public CitiesController(ILogger<CitiesController> logger, ICityInfoRepository cityInfoRepository, IMapper mapper)
         {
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this._cityInfoRepository = cityInfoRepository ?? throw new ArgumentNullException(nameof(cityInfoRepository));
+            this._mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities()
         {
             var cityEntities = await _cityInfoRepository.GetCitiesAsync();
-            var results = new List<CityWithoutPointsOfInterestDto>();
-            foreach (var city in cityEntities)
-            {
-                results.Add(new CityWithoutPointsOfInterestDto()
-                {
-                    Description = city.Description,
-                    Name = city.Name,
-                    Id = city.Id
-                });
-            }
+            //var results = new List<CityWithoutPointsOfInterestDto>();
+            //foreach (var city in cityEntities)
+            //{
+            //    results.Add(new CityWithoutPointsOfInterestDto()
+            //    {
+            //        Description = city.Description,
+            //        Name = city.Name,
+            //        Id = city.Id
+            //    });
+            //}
+            //[AHO] Mapping the Entity to the DTO using Auto Mapper
+            var results = _mapper.Map<IEnumerable<CityWithoutPointsOfInterestDto>>(cityEntities);
             return Ok(results);
         }
 
