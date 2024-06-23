@@ -156,26 +156,28 @@ namespace Ch06.Aho.CityInfo.API.Controllers
             return NoContent();
         }
 
-        /*
         [HttpDelete("{pointId}")]
-        public ActionResult DeletePointOfInterest(int cityId, int pointId)
+        public async Task<ActionResult> DeletePointOfInterest(int cityId, int pointId)
         {
-            var city = _citiesDataStore.Cities.FirstOrDefault(ci => ci.Id == cityId);
-            if (city == null)
+            if (!await _cityInfoRepository.CityExistsAsync(cityId))
             {
                 return NotFound();
             }
 
-            var point = city.PointsOfInterest.FirstOrDefault(pi => pi.Id == pointId);
-            if (point == null)
+            var pointOfInterestEntity = await _cityInfoRepository.GetPointOfInterestForCityAsync(cityId, pointId);
+            if (pointOfInterestEntity == null)
             {
                 return NotFound();
             }
 
-            city.PointsOfInterest.Remove(point);
+            _cityInfoRepository.DeletePointOfInterest(pointOfInterestEntity);
+            await _cityInfoRepository.SaveChangesAsync();
+
+            _notificationServiceConfig.Notify(
+                "Point of interest deleted.",
+                $"Point of interest {pointOfInterestEntity.Name} with the ID {pointOfInterestEntity.Id} was successfully deleted.");
 
             return NoContent();
         }
-        */
     }
 }

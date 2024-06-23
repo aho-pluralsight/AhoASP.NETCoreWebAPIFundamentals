@@ -51,6 +51,11 @@ namespace Ch06.Aho.CityInfo.API.Services.Repository
             }
         }
 
+        public void DeletePointOfInterest(PointOfInterest pointOfInterest)
+        {
+            _cityInfoDbContext.PointsOfInterest.Remove(pointOfInterest);
+        }
+
         public async Task<bool> SaveChangesAsync()
         {
             return (await _cityInfoDbContext.SaveChangesAsync() >= 0);
