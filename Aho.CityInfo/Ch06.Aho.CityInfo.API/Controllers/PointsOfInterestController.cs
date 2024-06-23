@@ -6,7 +6,7 @@ using Ch06.Aho.CityInfo.API.Services.Repository;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections;
-
+ 
 namespace Ch06.Aho.CityInfo.API.Controllers
 {
     [Route("api/cities/{cityId}/pointsofinterest")]
@@ -94,30 +94,32 @@ namespace Ch06.Aho.CityInfo.API.Controllers
                 }, pointOfInterestNewlyCreated);
         }
 
-        /*
         [HttpPut("{pointId}")]
-        public ActionResult UpdatePointOfInterest(int cityId, int pointId, PointOfInterestForUpdateDto updatePointOfInterest)
+        public async Task<ActionResult> UpdatePointOfInterest(int cityId, int pointId, PointOfInterestForUpdateDto updatePointOfInterest)
         {
-            var city = _citiesDataStore.Cities.FirstOrDefault(ci => ci.Id == cityId);
-            if (city == null)
+            if (!await _cityInfoRepository.CityExistsAsync(cityId))
             {
                 return NotFound();
             }
 
-            var oldPointOfInterest = city.PointsOfInterest.FirstOrDefault(pi => pi.Id == pointId);
-            if (oldPointOfInterest == null)
+            var pointOfInterest = await _cityInfoRepository.GetPointOfInterestForCityAsync(cityId, pointId);
+
+            if (pointOfInterest == null)
             {
                 return NotFound();
             }
 
-            oldPointOfInterest.Name = updatePointOfInterest.Name;
-            oldPointOfInterest.Description = updatePointOfInterest.Description;
+            //[AHO] Will map and update pointOfInterest object
+            _mapper.Map(updatePointOfInterest, pointOfInterest);
 
-            _notificationServiceFancy.Notify("Point of interest created.", $"Point of interest '{oldPointOfInterest.Name}' with the id '{oldPointOfInterest.Id}' was updated.");
+            await _cityInfoRepository.SaveChangesAsync();
+
+            _notificationServiceFancy.Notify("Point of interest created.", $"Point of interest '{pointOfInterest.Name}' with the id '{pointOfInterest.Id}' was updated.");
 
             return NoContent();
         }
 
+        /*
         [HttpPatch("{pointId}")]
         public ActionResult PartialUpdatePointOfInterest(int cityId, int pointId, JsonPatchDocument<PointOfInterestForUpdateDto> patchDocument)
         {
