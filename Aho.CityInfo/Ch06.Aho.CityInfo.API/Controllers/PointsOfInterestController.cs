@@ -119,47 +119,44 @@ namespace Ch06.Aho.CityInfo.API.Controllers
             return NoContent();
         }
 
-        /*
         [HttpPatch("{pointId}")]
-        public ActionResult PartialUpdatePointOfInterest(int cityId, int pointId, JsonPatchDocument<PointOfInterestForUpdateDto> patchDocument)
+        public async Task<ActionResult> PartialUpdatePointOfInterest(int cityId, int pointId, JsonPatchDocument<PointOfInterestForUpdateDto> patchDocument)
         {
-            var city = _citiesDataStore.Cities.FirstOrDefault(c => c.Id == cityId);
-            if (city == null)
+            if (!await _cityInfoRepository.CityExistsAsync(cityId))
             {
                 return NotFound();
             }
 
-            var storedPointOfInterest = city.PointsOfInterest.FirstOrDefault(p => p.Id == pointId);
-            if (storedPointOfInterest == null)
+            var pointOfInterestEntity = await _cityInfoRepository.GetPointOfInterestForCityAsync(cityId, pointId);
+            if (pointOfInterestEntity == null)
             {
                 return NotFound();
             }
 
-            var patchPointOfInterest = new PointOfInterestForUpdateDto()
-            {
-                Name = storedPointOfInterest.Name,
-                Description = storedPointOfInterest.Description
-            };
-            patchDocument.ApplyTo(patchPointOfInterest, ModelState);
+            var pointOfInterestPatch = _mapper.Map<PointOfInterestForUpdateDto>(pointOfInterestEntity);
+            
+            patchDocument.ApplyTo(pointOfInterestPatch, ModelState);
+            
             if (ModelState.IsValid == false)
             {
                 return BadRequest(ModelState);
             }
 
-            TryValidateModel(patchPointOfInterest);
+            TryValidateModel(pointOfInterestPatch);
             if (ModelState.IsValid == false)
             {
                 return BadRequest(ModelState);
             }
 
-            storedPointOfInterest.Name = patchPointOfInterest.Name;
-            storedPointOfInterest.Description = patchPointOfInterest.Description;
-
-            _notificationServiceConfig.Notify("Point of interest patched.", $"Point of interest '{storedPointOfInterest.Name}' with the id '{storedPointOfInterest.Id}' was successfully patched.");
+            _mapper.Map(pointOfInterestPatch, pointOfInterestEntity);
+            await _cityInfoRepository.SaveChangesAsync();
+            
+            _notificationServiceConfig.Notify("Point of interest patched.", $"Point of interest '{pointOfInterestEntity.Name}' with the id '{pointOfInterestEntity.Id}' was successfully patched.");
 
             return NoContent();
         }
 
+        /*
         [HttpDelete("{pointId}")]
         public ActionResult DeletePointOfInterest(int cityId, int pointId)
         {
