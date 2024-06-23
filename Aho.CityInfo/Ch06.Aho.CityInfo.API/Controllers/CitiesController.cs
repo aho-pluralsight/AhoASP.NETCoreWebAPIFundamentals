@@ -41,30 +41,21 @@ namespace Ch06.Aho.CityInfo.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<CityDto> GetCity(int id)
+        public async Task<ActionResult<CityDto>> GetCity(int id, bool includePointsOfInterest)
         {
-            //try
-            //{
-            //    if (id == 0)
-            //    {
-            //        throw new ArgumentException("This is nasty yo!");
-            //    }
+            var city = await _cityInfoRepository.GetCityAsync(id, includePointsOfInterest);
 
-            //    var city = _citiesDataStore.Cities.FirstOrDefault(city => city.Id == id);
+            if (city == null)
+            {
+                return NotFound();
+            }
 
-            //    if (city == null)
-            //    {
-            //        return NotFound();
-            //    }
+            if (includePointsOfInterest)
+            {
+                return Ok(_mapper.Map<CityDto>(city));
+            }
 
-            //    return Ok(city);
-            //}
-            //catch (Exception ex)
-            //{
-            //    _logger.LogCritical($"Bad exception occured while handling a call to get the city with the id {id}!", ex);
-            //    return StatusCode(500, $"Something nasty occurred on the server side!");
-            //}
-            return Ok();
+            return Ok(_mapper.Map<CityWithoutPointsOfInterestDto>(city));
         }
     }
 }
