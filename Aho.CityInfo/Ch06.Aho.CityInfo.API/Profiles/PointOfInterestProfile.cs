@@ -7,6 +7,7 @@ namespace Ch06.Aho.CityInfo.API.Profiles
         public PointOfInterestProfile()
         {
             CreateMap<Entities.PointOfInterest, Models.PointOfInterestDto>();
+            CreateMap<Models.PointOfInterestForCreateDto, Entities.PointOfInterest>();
         }
     }
 }

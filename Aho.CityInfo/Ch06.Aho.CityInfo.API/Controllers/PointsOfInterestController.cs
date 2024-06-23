@@ -21,9 +21,9 @@ namespace Ch06.Aho.CityInfo.API.Controllers
         private readonly ICityInfoRepository _cityInfoRepository;
         private readonly IMapper _mapper;
 
-        public PointsOfInterestController(ILogger<PointsOfInterestController> logger, 
-            SimpleNotificationService notificationServiceSimple, 
-            [FromKeyedServices("notifFancy")] INotificationService notificationServiceFancy, 
+        public PointsOfInterestController(ILogger<PointsOfInterestController> logger,
+            SimpleNotificationService notificationServiceSimple,
+            [FromKeyedServices("notifFancy")] INotificationService notificationServiceFancy,
             [FromKeyedServices("notifConfig")] INotificationService notificationServiceConfig,
             ICityInfoRepository cityInfoRepository,
             IMapper mapper)
@@ -68,30 +68,33 @@ namespace Ch06.Aho.CityInfo.API.Controllers
             return Ok(_mapper.Map<PointOfInterest>(pointOfInterest));
         }
 
-        /*
         [HttpPost]
-        public ActionResult<PointOfInterestDto> CreatePointOfInterest(int cityId, PointOfInterestForCreateDto pointOfInterestForCreation)
+        public async Task<ActionResult<PointOfInterestDto>> CreatePointOfInterest(int cityId, PointOfInterestForCreateDto pointOfInterestForCreation)
         {
-            var city = _citiesDataStore.Cities.FirstOrDefault<CityDto>(ci => ci.Id == cityId);
-            if (city == null)
+            if (!await _cityInfoRepository.CityExistsAsync(cityId))
             {
                 return NotFound();
             }
 
-            var maxPointOfIntId = _citiesDataStore.Cities.SelectMany(ci => ci.PointsOfInterest).Max(pi => pi.Id);
-            var newPointOfInterest = new PointOfInterestDto()
-            {
-                Id = ++maxPointOfIntId,
-                Name = pointOfInterestForCreation.Name,
-                Description = pointOfInterestForCreation.Description
-            };
-            city.PointsOfInterest.Add(newPointOfInterest);
+            var pointOfInterest = _mapper.Map<PointOfInterest>(pointOfInterestForCreation);
 
-            _notificationServiceSimple.Notify("Point of interest created.", $"Point of interest '{newPointOfInterest.Name}' with the id '{newPointOfInterest.Id}' is created.");
+            await _cityInfoRepository.AddPointOfInterestForCityAsync(cityId, pointOfInterest);
 
-            return CreatedAtRoute(MethodGetPointOfInterest, new { cityId = city.Id, pointId = newPointOfInterest.Id }, newPointOfInterest);
+            await _cityInfoRepository.SaveChangesAsync();
+
+            var pointOfInterestNewlyCreated = _mapper.Map<PointOfInterestDto>(pointOfInterest);
+
+            _notificationServiceSimple.Notify("Point of interest created.", $"Point of interest '{pointOfInterest.Name}' with the id '{pointOfInterest.Id}' is created.");
+
+            return CreatedAtRoute(MethodGetPointOfInterest,
+                new
+                {
+                    cityId = pointOfInterest.CityId,
+                    pointId = pointOfInterest.Id
+                }, pointOfInterestNewlyCreated);
         }
 
+        /*
         [HttpPut("{pointId}")]
         public ActionResult UpdatePointOfInterest(int cityId, int pointId, PointOfInterestForUpdateDto updatePointOfInterest)
         {
