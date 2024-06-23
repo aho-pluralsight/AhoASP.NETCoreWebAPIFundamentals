@@ -1,7 +1,11 @@
-﻿using Ch06.Aho.CityInfo.API.Models;
+﻿using AutoMapper;
+using Ch06.Aho.CityInfo.API.Entities;
+using Ch06.Aho.CityInfo.API.Models;
 using Ch06.Aho.CityInfo.API.Services;
+using Ch06.Aho.CityInfo.API.Services.Repository;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections;
 
 namespace Ch06.Aho.CityInfo.API.Controllers
 {
@@ -14,53 +18,57 @@ namespace Ch06.Aho.CityInfo.API.Controllers
         private readonly SimpleNotificationService _notificationServiceSimple;
         private readonly INotificationService _notificationServiceFancy;
         private readonly INotificationService _notificationServiceConfig;
-        private readonly CitiesDataStore _citiesDataStore;
+        private readonly ICityInfoRepository _cityInfoRepository;
+        private readonly IMapper _mapper;
+
         public PointsOfInterestController(ILogger<PointsOfInterestController> logger, 
             SimpleNotificationService notificationServiceSimple, 
             [FromKeyedServices("notifFancy")] INotificationService notificationServiceFancy, 
             [FromKeyedServices("notifConfig")] INotificationService notificationServiceConfig,
-            CitiesDataStore citiesDataStore)
+            ICityInfoRepository cityInfoRepository,
+            IMapper mapper)
         {
             _logger = logger ?? throw new ArgumentNullException();
-            _notificationServiceSimple = notificationServiceSimple ?? throw new ArgumentNullException();
-            _notificationServiceFancy = notificationServiceFancy ?? throw new ArgumentNullException();
-            _notificationServiceConfig = notificationServiceConfig ?? throw new ArgumentNullException();
-            _citiesDataStore = citiesDataStore ?? throw new ArgumentNullException();
+            _notificationServiceSimple = notificationServiceSimple ?? throw new ArgumentNullException(nameof(notificationServiceSimple));
+            _notificationServiceFancy = notificationServiceFancy ?? throw new ArgumentNullException(nameof(notificationServiceFancy));
+            _notificationServiceConfig = notificationServiceConfig ?? throw new ArgumentNullException(nameof(notificationServiceConfig));
+            _cityInfoRepository = cityInfoRepository ?? throw new ArgumentNullException(nameof(cityInfoRepository));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<PointOfInterestDto>> GetPointsOfInterest(int cityId)
+        public async Task<ActionResult<IEnumerable<PointOfInterestDto>>> GetPointsOfInterest(int cityId)
         {
-            if (cityId == 0)
+            if (!await _cityInfoRepository.CityExistsAsync(cityId))
             {
-                throw new Exception("Simulated-nasty-not-handled exception!");
-            }
-
-            var city = _citiesDataStore.Cities.FirstOrDefault(city => city.Id == cityId);
-            if (city == null)
-            {
+                _logger.LogInformation($"The city with the id {cityId} was not found when trying to access the points of interest.");
                 return NotFound();
             }
-            return Ok(city.PointsOfInterest);
+
+            var pointsOfInterestForCity = await _cityInfoRepository.GetPointsOfInterestForCityAsync(cityId);
+
+            return Ok(_mapper.Map<IEnumerable<PointOfInterestDto>>(pointsOfInterestForCity));
         }
 
         [HttpGet("{pointId}", Name = MethodGetPointOfInterest)]
-        public ActionResult<PointOfInterestDto> GetPointOfInterest(int cityId, int pointId)
+        public async Task<ActionResult<PointOfInterestDto>> GetPointOfInterest(int cityId, int pointId)
         {
-            var city = _citiesDataStore.Cities.FirstOrDefault(city => city.Id == cityId);
-            if (city == null)
+            if (!await _cityInfoRepository.CityExistsAsync(cityId))
             {
-                _logger.LogDebug($"The city with the id = {cityId} was not found when trying to get the point of interest with the id = {pointId}.");
                 return NotFound();
             }
-            var pointOfInterest = city.PointsOfInterest.FirstOrDefault(point => point.Id == pointId);
+
+            var pointOfInterest = await _cityInfoRepository.GetPointOfInterestForCityAsync(cityId, pointId);
+
             if (pointOfInterest == null)
             {
                 return NotFound();
             }
-            return Ok(pointOfInterest);
+
+            return Ok(_mapper.Map<PointOfInterest>(pointOfInterest));
         }
 
+        /*
         [HttpPost]
         public ActionResult<PointOfInterestDto> CreatePointOfInterest(int cityId, PointOfInterestForCreateDto pointOfInterestForCreation)
         {
@@ -166,5 +174,6 @@ namespace Ch06.Aho.CityInfo.API.Controllers
 
             return NoContent();
         }
+        */
     }
 }

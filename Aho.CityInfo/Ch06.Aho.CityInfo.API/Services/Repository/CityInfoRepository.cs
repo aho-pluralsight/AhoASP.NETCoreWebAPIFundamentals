@@ -27,6 +27,11 @@ namespace Ch06.Aho.CityInfo.API.Services.Repository
             return await _cityInfoDbContext.Cities.Where(c => c.Id == cityId).FirstOrDefaultAsync();
         }
 
+        public async Task<bool> CityExistsAsync(int cityId)
+        {
+            return await _cityInfoDbContext.Cities.AnyAsync(c => c.Id == cityId);
+        }
+
         public async Task<IEnumerable<PointOfInterest>> GetPointsOfInterestForCityAsync(int cityId)
         {
             return await _cityInfoDbContext.PointsOfInterest.Where(p => p.CityId == cityId).ToListAsync();
