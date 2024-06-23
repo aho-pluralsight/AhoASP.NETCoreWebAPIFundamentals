@@ -1,4 +1,3 @@
-using Ch06.Aho.CityInfo.API;
 using Ch06.Aho.CityInfo.API.DbContexts;
 using Ch06.Aho.CityInfo.API.Services;
 using Ch06.Aho.CityInfo.API.Services.Repository;
@@ -53,7 +52,6 @@ builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
 builder.Services.AddTransient<SimpleNotificationService>();
 builder.Services.AddKeyedScoped<INotificationService, FancyNotificationService>("notifFancy");
 builder.Services.AddKeyedScoped<INotificationService, ConfigurableNotificationService>("notifConfig");
-builder.Services.AddSingleton<CitiesDataStore>();
 builder.Services.AddDbContext<AhoCityInfoContext>(dbContextOptions
     => dbContextOptions.UseSqlite(builder.Configuration["ConnectionStrings:AhoCityInfoDbConnectionString"])
 );
