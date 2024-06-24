@@ -1,5 +1,6 @@
 ﻿using Ch06.Aho.CityInfo.API.DbContexts;
 using Ch06.Aho.CityInfo.API.Entities;
+using Ch06.Aho.CityInfo.API.Services.Pagination;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ch06.Aho.CityInfo.API.Services.Repository
@@ -18,7 +19,7 @@ namespace Ch06.Aho.CityInfo.API.Services.Repository
             return await _cityInfoDbContext.Cities.OrderBy(c => c.Name).ToListAsync();
         }
 
-        public async Task<IEnumerable<City>> GetCitiesAsync(string? filter, string? searchQuery, int pageNumber, int pageSize)
+        public async Task<(IEnumerable<City> CitiesList, PaginationMetadata Metadata)> GetCitiesAsync(string? filter, string? searchQuery, int pageNumber, int pageSize)
         {
             //if (filter == null && searchQuery == null)
             //{
@@ -43,11 +44,17 @@ namespace Ch06.Aho.CityInfo.API.Services.Repository
                     );
             }
 
-            return await citiesCollection
+            var cities = await citiesCollection
                 .OrderBy(c => c.Name)
                 .Skip(pageSize * (pageNumber - 1))
                 .Take(pageSize)
                 .ToListAsync();
+
+            var totalItemCount = await citiesCollection.CountAsync();
+
+            var result = (cities, new PaginationMetadata(totalItemCount, pageSize, pageNumber));
+
+            return result;
         }
 
         public async Task<City?> GetCityAsync(int cityId, bool includePointsOfInterest)

@@ -2,6 +2,8 @@
 using Ch06.Aho.CityInfo.API.Models;
 using Ch06.Aho.CityInfo.API.Services.Repository;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
+//using Newtonsoft.Json;
 
 namespace Ch06.Aho.CityInfo.API.Controllers
 {
@@ -34,20 +36,11 @@ namespace Ch06.Aho.CityInfo.API.Controllers
                 pageSize = maxPageSize;
             }
 
-            var cityEntities = await _cityInfoRepository.GetCitiesAsync(filter, search, pageNumber, pageSize);
-            //var results = new List<CityWithoutPointsOfInterestDto>();
-            //foreach (var city in cityEntities)
-            //{
-            //    results.Add(new CityWithoutPointsOfInterestDto()
-            //    {
-            //        Description = city.Description,
-            //        Name = city.Name,
-            //        Id = city.Id
-            //    });
-            //}
+            var cityPage = await _cityInfoRepository.GetCitiesAsync(filter, search, pageNumber, pageSize);
             //[AHO] Mapping the Entity to the DTO using Auto Mapper
-            var results = _mapper.Map<IEnumerable<CityWithoutPointsOfInterestDto>>(cityEntities);
-            return Ok(results);
+            var cities = _mapper.Map<IEnumerable<CityWithoutPointsOfInterestDto>>(cityPage.CitiesList);
+            Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(cityPage.Metadata));
+            return Ok(cities);
         }
 
         [HttpGet("{id}")]
