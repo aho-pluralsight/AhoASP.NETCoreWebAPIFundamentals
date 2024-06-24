@@ -18,12 +18,12 @@ namespace Ch06.Aho.CityInfo.API.Services.Repository
             return await _cityInfoDbContext.Cities.OrderBy(c => c.Name).ToListAsync();
         }
 
-        public async Task<IEnumerable<City>> GetCitiesAsync(string? filter, string? searchQuery)
+        public async Task<IEnumerable<City>> GetCitiesAsync(string? filter, string? searchQuery, int pageNumber, int pageSize)
         {
-            if (filter == null && searchQuery == null)
-            {
-                return await GetCitiesAsync();
-            }
+            //if (filter == null && searchQuery == null)
+            //{
+            //    return await GetCitiesAsync();
+            //}
 
             var citiesCollection = _cityInfoDbContext.Cities as IQueryable<City>;
 
@@ -43,7 +43,11 @@ namespace Ch06.Aho.CityInfo.API.Services.Repository
                     );
             }
 
-            return await citiesCollection.OrderBy(c => c.Name).ToListAsync();
+            return await citiesCollection
+                .OrderBy(c => c.Name)
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
         }
 
         public async Task<City?> GetCityAsync(int cityId, bool includePointsOfInterest)

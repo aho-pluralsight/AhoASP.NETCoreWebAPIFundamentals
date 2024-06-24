@@ -13,6 +13,7 @@ namespace Ch06.Aho.CityInfo.API.Controllers
         private readonly ILogger<CitiesController> _logger;
         private readonly ICityInfoRepository _cityInfoRepository;
         private readonly IMapper _mapper;
+        private readonly int maxPageSize = 20;
 
         public CitiesController(ILogger<CitiesController> logger, ICityInfoRepository cityInfoRepository, IMapper mapper)
         {
@@ -22,9 +23,18 @@ namespace Ch06.Aho.CityInfo.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities([FromQuery(Name = "name")] string? filter, string? search)
+        public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities(
+            [FromQuery(Name = "name")] string? filter,
+            string? search,
+            int pageNumber = 1,
+            int pageSize = 10)
         {
-            var cityEntities = await _cityInfoRepository.GetCitiesAsync(filter, search);
+            if (pageSize > maxPageSize)
+            {
+                pageSize = maxPageSize;
+            }
+
+            var cityEntities = await _cityInfoRepository.GetCitiesAsync(filter, search, pageNumber, pageSize);
             //var results = new List<CityWithoutPointsOfInterestDto>();
             //foreach (var city in cityEntities)
             //{
