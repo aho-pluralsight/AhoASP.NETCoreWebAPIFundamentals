@@ -22,9 +22,9 @@ namespace Ch06.Aho.CityInfo.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities([FromQuery(Name = "name")] string? filter)
+        public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities([FromQuery(Name = "name")] string? filter, string? search)
         {
-            var cityEntities = await _cityInfoRepository.GetCitiesAsync(filter);
+            var cityEntities = await _cityInfoRepository.GetCitiesAsync(filter, search);
             //var results = new List<CityWithoutPointsOfInterestDto>();
             //foreach (var city in cityEntities)
             //{
