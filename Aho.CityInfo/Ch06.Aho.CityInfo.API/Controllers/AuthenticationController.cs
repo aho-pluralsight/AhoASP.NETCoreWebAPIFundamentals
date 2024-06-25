@@ -60,6 +60,7 @@ namespace Ch06.Aho.CityInfo.API.Controllers
             claims.Add(new Claim(ClaimTypes.GivenName, user.FirstName));
             claims.Add(new Claim(ClaimTypes.Surname, user.LastName));
             claims.Add(new Claim(ClaimTypes.Role, user.Role));
+            claims.Add(new Claim("Role", user.Role));
 
             var iss = _configuration["Authentication:Issuer"];
             var aud = _configuration["Authentication:Audience"];

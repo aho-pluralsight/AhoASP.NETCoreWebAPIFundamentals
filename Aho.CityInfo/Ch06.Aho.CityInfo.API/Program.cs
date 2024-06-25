@@ -73,6 +73,14 @@ builder.Services.AddAuthentication("Bearer")
         };
     }
     );
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("OnlyDevelopers", policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireClaim("Role", "Dev");
+    });
+});
 
 var app = builder.Build();
 
