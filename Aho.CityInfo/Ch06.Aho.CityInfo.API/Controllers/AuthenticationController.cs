@@ -1,4 +1,5 @@
-﻿using Ch06.Aho.CityInfo.API.Services.Auth;
+﻿using Asp.Versioning;
+using Ch06.Aho.CityInfo.API.Services.Auth;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -9,6 +10,7 @@ namespace Ch06.Aho.CityInfo.API.Controllers
 {
     [Route("api/login")]
     [ApiController]
+    [ApiVersion(0.1)]
     public class AuthenticationController : Controller
     {
         private readonly IConfiguration _configuration;

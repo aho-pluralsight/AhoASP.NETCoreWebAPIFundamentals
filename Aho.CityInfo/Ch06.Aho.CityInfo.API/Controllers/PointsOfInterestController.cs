@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Asp.Versioning;
+using AutoMapper;
 using Ch06.Aho.CityInfo.API.Entities;
 using Ch06.Aho.CityInfo.API.Models;
 using Ch06.Aho.CityInfo.API.Services;
@@ -12,6 +13,7 @@ namespace Ch06.Aho.CityInfo.API.Controllers
     [Route("api/cities/{cityId}/pointsofinterest")]
     [Authorize]
     [ApiController]
+    [ApiVersion(3)]
     public class PointsOfInterestController : ControllerBase
     {
         private const string MethodGetPointOfInterest = "GetPointOfInterest";

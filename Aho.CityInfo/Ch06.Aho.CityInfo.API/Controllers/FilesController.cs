@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 
@@ -8,6 +9,7 @@ namespace Ch06.Aho.CityInfo.API.Controllers
     [Route("api/files")]
     [Authorize]
     [ApiController]
+    [ApiVersion(1.1, Deprecated = true)]
     public class FilesController : ControllerBase
     {
         private readonly string _fileNamePrefix = "Ch03.Aho.CityInfo.API.";

@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Asp.Versioning;
+using AutoMapper;
 using Ch06.Aho.CityInfo.API.Models;
 using Ch06.Aho.CityInfo.API.Services.Repository;
 using Microsoft.AspNetCore.Authorization;
@@ -13,6 +14,8 @@ namespace Ch06.Aho.CityInfo.API.Controllers
     [Route("api/cities")]
     [Authorize]
     [ApiController]
+    [ApiVersion(2.7)]
+    [ApiVersion(3.0)]
     public class CitiesController : ControllerBase
     {
         private readonly ILogger<CitiesController> _logger;
