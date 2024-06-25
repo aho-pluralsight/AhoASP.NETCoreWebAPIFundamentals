@@ -10,7 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Ch06.Aho.CityInfo.API.Controllers
 {
-    [Route("api/cities/{cityId}/pointsofinterest")]
+    //[Route("api/cities/{cityId}/pointsofinterest")]
+    [Route("api/v{version:apiVersion}/cities/{cityId}/pointsofinterest")]
     [Authorize]
     [ApiController]
     [ApiVersion(3)]

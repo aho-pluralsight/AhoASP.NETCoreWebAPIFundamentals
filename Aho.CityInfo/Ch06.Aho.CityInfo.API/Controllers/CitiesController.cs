@@ -12,6 +12,7 @@ namespace Ch06.Aho.CityInfo.API.Controllers
 {
     //[Route("api/[controller]")]
     [Route("api/cities")]
+    [Route("api/v{version:apiVersion}/cities")]
     [Authorize]
     [ApiController]
     [ApiVersion(2.7)]

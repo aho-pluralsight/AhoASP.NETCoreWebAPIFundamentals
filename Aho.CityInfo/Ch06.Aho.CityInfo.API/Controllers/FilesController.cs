@@ -7,6 +7,7 @@ namespace Ch06.Aho.CityInfo.API.Controllers
 {
     //[Route("api/[controller]")]
     [Route("api/files")]
+    [Route("api/v{version:apiVersion}/files")]
     [Authorize]
     [ApiController]
     [ApiVersion(1.1, Deprecated = true)]
