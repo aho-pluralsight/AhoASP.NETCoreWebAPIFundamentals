@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 
 namespace Ch06.Aho.CityInfo.API.Controllers
 {
     //[Route("api/[controller]")]
     [Route("api/files")]
+    [Authorize]
     [ApiController]
     public class FilesController : ControllerBase
     {

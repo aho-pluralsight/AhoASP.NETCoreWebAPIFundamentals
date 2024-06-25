@@ -3,12 +3,14 @@ using Ch06.Aho.CityInfo.API.Entities;
 using Ch06.Aho.CityInfo.API.Models;
 using Ch06.Aho.CityInfo.API.Services;
 using Ch06.Aho.CityInfo.API.Services.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ch06.Aho.CityInfo.API.Controllers
 {
     [Route("api/cities/{cityId}/pointsofinterest")]
+    [Authorize]
     [ApiController]
     public class PointsOfInterestController : ControllerBase
     {

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Ch06.Aho.CityInfo.API.Models;
 using Ch06.Aho.CityInfo.API.Services.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 //using Newtonsoft.Json;
@@ -9,6 +10,7 @@ namespace Ch06.Aho.CityInfo.API.Controllers
 {
     //[Route("api/[controller]")]
     [Route("api/cities")]
+    [Authorize]
     [ApiController]
     public class CitiesController : ControllerBase
     {
