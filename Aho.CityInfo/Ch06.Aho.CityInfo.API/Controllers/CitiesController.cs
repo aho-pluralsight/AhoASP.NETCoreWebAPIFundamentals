@@ -3,6 +3,7 @@ using Ch06.Aho.CityInfo.API.Models;
 using Ch06.Aho.CityInfo.API.Services.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using System.Text.Json;
 //using Newtonsoft.Json;
 
@@ -48,6 +49,14 @@ namespace Ch06.Aho.CityInfo.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<CityDto>> GetCity(int id, bool includePointsOfInterest)
         {
+            //var sub = User.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
+            var givenname = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.GivenName)?.Value;
+
+            if (givenname != "Mad")
+            {
+                return Forbid();
+            }
+
             var city = await _cityInfoRepository.GetCityAsync(id, includePointsOfInterest);
 
             if (city == null)
