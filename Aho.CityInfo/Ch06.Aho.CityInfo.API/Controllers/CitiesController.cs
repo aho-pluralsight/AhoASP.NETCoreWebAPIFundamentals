@@ -31,6 +31,14 @@ namespace Ch06.Aho.CityInfo.API.Controllers
             this._mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
+        /// <summary>
+        /// Returns a list of cities available in the API
+        /// </summary>
+        /// <param name="filter">City name to filter with</param>
+        /// <param name="search">String to search through names and descriptions on cities</param>
+        /// <param name="pageNumber">Number of the page to get</param>
+        /// <param name="pageSize">The size of the page</param>
+        /// <returns>List of cities</returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities(
             [FromQuery(Name = "name")] string? filter,
@@ -50,6 +58,12 @@ namespace Ch06.Aho.CityInfo.API.Controllers
             return Ok(cities);
         }
 
+        /// <summary>
+        /// Get a city by its Id
+        /// </summary>
+        /// <param name="id">The city Id</param>
+        /// <param name="includePointsOfInterest">Wether to include the city's points of interests or not</param>
+        /// <returns>A city or nothing</returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<CityDto>> GetCity(int id, bool includePointsOfInterest)
         {

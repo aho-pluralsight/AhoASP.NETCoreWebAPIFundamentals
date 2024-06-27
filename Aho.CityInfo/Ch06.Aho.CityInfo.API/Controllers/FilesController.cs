@@ -24,6 +24,11 @@ namespace Ch06.Aho.CityInfo.API.Controllers
         }
 
         #region API Methods
+        /// <summary>
+        /// Returns a file with the Id passed in the params
+        /// </summary>
+        /// <param name="id">File Id</param>
+        /// <returns>A file</returns>
         [HttpGet("{id}")]
         public ActionResult GetFile(int id)
         {
@@ -43,6 +48,11 @@ namespace Ch06.Aho.CityInfo.API.Controllers
             return File(fileBytes, fileContentType, file);
         }
 
+        /// <summary>
+        /// Uploads a file
+        /// </summary>
+        /// <param name="file">The file to load</param>
+        /// <returns>Nothing</returns>
         [HttpPost]
         public async Task<ActionResult> UploadFile(IFormFile file)
         {

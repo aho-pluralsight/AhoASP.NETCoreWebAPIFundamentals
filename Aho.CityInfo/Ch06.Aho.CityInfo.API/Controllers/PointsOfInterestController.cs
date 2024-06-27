@@ -40,6 +40,11 @@ namespace Ch06.Aho.CityInfo.API.Controllers
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
+        /// <summary>
+        /// Get the points of interest for a city
+        /// </summary>
+        /// <param name="cityId">The id of the city</param>
+        /// <returns>Points of interest</returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PointOfInterestDto>>> GetPointsOfInterest(int cityId)
         {
@@ -54,6 +59,12 @@ namespace Ch06.Aho.CityInfo.API.Controllers
             return Ok(_mapper.Map<IEnumerable<PointOfInterestDto>>(pointsOfInterestForCity));
         }
 
+        /// <summary>
+        /// Gets a point of interest
+        /// </summary>
+        /// <param name="cityId">The city id</param>
+        /// <param name="pointId">The POI id</param>
+        /// <returns>Point of interest</returns>
         [HttpGet("{pointId}", Name = MethodGetPointOfInterest)]
         public async Task<ActionResult<PointOfInterestDto>> GetPointOfInterest(int cityId, int pointId)
         {
@@ -72,6 +83,12 @@ namespace Ch06.Aho.CityInfo.API.Controllers
             return Ok(_mapper.Map<PointOfInterest>(pointOfInterest));
         }
 
+        /// <summary>
+        /// Create a point of interest
+        /// </summary>
+        /// <param name="cityId">The city id</param>
+        /// <param name="pointOfInterestForCreation">The POI id</param>
+        /// <returns>OK when POI is created</returns>
         [HttpPost]
         public async Task<ActionResult<PointOfInterestDto>> CreatePointOfInterest(int cityId, PointOfInterestForCreateDto pointOfInterestForCreation)
         {
@@ -98,6 +115,13 @@ namespace Ch06.Aho.CityInfo.API.Controllers
                 }, pointOfInterestNewlyCreated);
         }
 
+        /// <summary>
+        /// Update a point of interest
+        /// </summary>
+        /// <param name="cityId">The city id</param>
+        /// <param name="pointId">The POI id</param>
+        /// <param name="updatePointOfInterest">PointOfInterestForUpdateDto</param>
+        /// <returns>Ok when updated</returns>
         [HttpPut("{pointId}")]
         public async Task<ActionResult> UpdatePointOfInterest(int cityId, int pointId, PointOfInterestForUpdateDto updatePointOfInterest)
         {
@@ -123,6 +147,13 @@ namespace Ch06.Aho.CityInfo.API.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Partial update of a point of interest
+        /// </summary>
+        /// <param name="cityId">The city id</param>
+        /// <param name="pointId">The POI id</param>
+        /// <param name="patchDocument">Patch document</param>
+        /// <returns>OK if the patch is successful</returns>
         [HttpPatch("{pointId}")]
         public async Task<ActionResult> PartialUpdatePointOfInterest(int cityId, int pointId, JsonPatchDocument<PointOfInterestForUpdateDto> patchDocument)
         {
@@ -160,6 +191,12 @@ namespace Ch06.Aho.CityInfo.API.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Delete a point of interest
+        /// </summary>
+        /// <param name="cityId">The city id</param>
+        /// <param name="pointId">The POI id</param>
+        /// <returns>Ok if deletion is successful</returns>
         [HttpDelete("{pointId}")]
         public async Task<ActionResult> DeletePointOfInterest(int cityId, int pointId)
         {
