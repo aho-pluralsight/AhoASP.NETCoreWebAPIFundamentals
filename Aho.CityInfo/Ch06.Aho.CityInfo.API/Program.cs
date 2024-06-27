@@ -108,6 +108,27 @@ builder.Services.AddSwaggerGen(setup =>
     var xmlCommentsFileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlCommentsFileFullPath = Path.Combine(AppContext.BaseDirectory, xmlCommentsFileName);
     setup.IncludeXmlComments(xmlCommentsFileFullPath);
+
+    setup.AddSecurityDefinition("AhoCityInfoApiAuth", new()
+    {
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        Description = "Provide a valid token to integrate with our cool API !"
+    });
+
+    setup.AddSecurityRequirement(new()
+    {
+        {
+            new()
+            {
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference {
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Id = "AhoCityInfoApiAuth"
+                }
+            },
+            new List<string>()
+        }
+    });
 });
 
 var app = builder.Build();
