@@ -1,3 +1,4 @@
+using Asp.Versioning.ApiExplorer;
 using Ch06.Aho.CityInfo.API.DbContexts;
 using Ch06.Aho.CityInfo.API.Services;
 using Ch06.Aho.CityInfo.API.Services.Repository;
@@ -50,12 +51,6 @@ builder.Services.AddProblemDetails(options =>
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(setup =>
-{
-    var xmlCommentsFileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlCommentsFileFullPath = Path.Combine(AppContext.BaseDirectory, xmlCommentsFileName);
-    setup.IncludeXmlComments(xmlCommentsFileFullPath);
-});
 builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
 builder.Services.AddTransient<SimpleNotificationService>();
 builder.Services.AddKeyedScoped<INotificationService, FancyNotificationService>("notifFancy");
@@ -92,7 +87,28 @@ builder.Services.AddApiVersioning(setup =>
     setup.ReportApiVersions = true;
     setup.AssumeDefaultVersionWhenUnspecified = true;
     setup.DefaultApiVersion = new Asp.Versioning.ApiVersion(3.0);
-}).AddMvc();
+}).AddMvc()
+.AddApiExplorer(setup =>
+{
+    setup.SubstituteApiVersionInUrl = true;
+});
+var apiVersionDescriptionProvider = builder.Services.BuildServiceProvider().GetRequiredService<IApiVersionDescriptionProvider>();
+builder.Services.AddSwaggerGen(setup =>
+{
+    foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions)
+    {
+        setup.SwaggerDoc(description.GroupName,
+            new()
+            {
+                Title = "AHO - City Info API",
+                Version = $"[ {description.ApiVersion.ToString()} ]",
+                Description = "The best API in the universe"
+            });
+    }
+    var xmlCommentsFileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlCommentsFileFullPath = Path.Combine(AppContext.BaseDirectory, xmlCommentsFileName);
+    setup.IncludeXmlComments(xmlCommentsFileFullPath);
+});
 
 var app = builder.Build();
 
@@ -106,7 +122,14 @@ if (!app.Environment.IsDevelopment())
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(setup =>
+    {
+        var descriptions = app.DescribeApiVersions();
+        foreach (var description in descriptions)
+        {
+            setup.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", $"version: aho-{description.GroupName}");
+        }
+    });
 }
 
 app.UseHttpsRedirection();
