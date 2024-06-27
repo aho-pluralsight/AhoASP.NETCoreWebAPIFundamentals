@@ -45,7 +45,11 @@ namespace Ch06.Aho.CityInfo.API.Controllers
         /// </summary>
         /// <param name="cityId">The id of the city</param>
         /// <returns>Points of interest</returns>
+        /// <response code="200">Returns POIs</response>
+        /// <response code="404">Pas aujourd'hui !</response>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<PointOfInterestDto>>> GetPointsOfInterest(int cityId)
         {
             if (!await _cityInfoRepository.CityExistsAsync(cityId))
@@ -65,7 +69,11 @@ namespace Ch06.Aho.CityInfo.API.Controllers
         /// <param name="cityId">The city id</param>
         /// <param name="pointId">The POI id</param>
         /// <returns>Point of interest</returns>
+        /// <response code="200">Returns the requested POI</response>
+        /// <response code="404">Pas aujourd'hui !</response>
         [HttpGet("{pointId}", Name = MethodGetPointOfInterest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<PointOfInterestDto>> GetPointOfInterest(int cityId, int pointId)
         {
             if (!await _cityInfoRepository.CityExistsAsync(cityId))
@@ -89,7 +97,13 @@ namespace Ch06.Aho.CityInfo.API.Controllers
         /// <param name="cityId">The city id</param>
         /// <param name="pointOfInterestForCreation">The POI id</param>
         /// <returns>OK when POI is created</returns>
+        /// <response code="201">POI created</response>
+        /// <response code="400">Bad request yo !</response>
+        /// <response code="404">Pas aujourd'hui !</response>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<ActionResult<PointOfInterestDto>> CreatePointOfInterest(int cityId, PointOfInterestForCreateDto pointOfInterestForCreation)
         {
             if (!await _cityInfoRepository.CityExistsAsync(cityId))
@@ -122,7 +136,13 @@ namespace Ch06.Aho.CityInfo.API.Controllers
         /// <param name="pointId">The POI id</param>
         /// <param name="updatePointOfInterest">PointOfInterestForUpdateDto</param>
         /// <returns>Ok when updated</returns>
+        /// <response code="204">Updated (no content)</response>
+        /// <response code="400">Bad request yo !</response>
+        /// <response code="404">Pas aujourd'hui !</response>
         [HttpPut("{pointId}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> UpdatePointOfInterest(int cityId, int pointId, PointOfInterestForUpdateDto updatePointOfInterest)
         {
             if (!await _cityInfoRepository.CityExistsAsync(cityId))
@@ -154,7 +174,13 @@ namespace Ch06.Aho.CityInfo.API.Controllers
         /// <param name="pointId">The POI id</param>
         /// <param name="patchDocument">Patch document</param>
         /// <returns>OK if the patch is successful</returns>
+        /// <response code="204">No content (patched)</response>
+        /// <response code="400">Bad request yo !</response>
+        /// <response code="404">Pas aujourd'hui !</response>
         [HttpPatch("{pointId}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> PartialUpdatePointOfInterest(int cityId, int pointId, JsonPatchDocument<PointOfInterestForUpdateDto> patchDocument)
         {
             if (!await _cityInfoRepository.CityExistsAsync(cityId))
@@ -197,7 +223,13 @@ namespace Ch06.Aho.CityInfo.API.Controllers
         /// <param name="cityId">The city id</param>
         /// <param name="pointId">The POI id</param>
         /// <returns>Ok if deletion is successful</returns>
+        /// <response code="204">No content (deleted)</response>
+        /// <response code="400">Bad request yo !</response>
+        /// <response code="404">Pas aujourd'hui !</response>
         [HttpDelete("{pointId}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> DeletePointOfInterest(int cityId, int pointId)
         {
             if (!await _cityInfoRepository.CityExistsAsync(cityId))

@@ -39,6 +39,7 @@ namespace Ch06.Aho.CityInfo.API.Controllers
         /// <param name="pageNumber">Number of the page to get</param>
         /// <param name="pageSize">The size of the page</param>
         /// <returns>List of cities</returns>
+        /// <response code="200">Returns a list of cities</response>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities(
             [FromQuery(Name = "name")] string? filter,
@@ -64,7 +65,13 @@ namespace Ch06.Aho.CityInfo.API.Controllers
         /// <param name="id">The city Id</param>
         /// <param name="includePointsOfInterest">Wether to include the city's points of interests or not</param>
         /// <returns>A city or nothing</returns>
+        /// <response code="200">Returns the requested city</response>
+        /// <response code="403">You don't have permission man</response>
+        /// <response code="404">Pas aujourd'hui !</response>
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<CityDto>> GetCity(int id, bool includePointsOfInterest)
         {
             //var sub = User.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;

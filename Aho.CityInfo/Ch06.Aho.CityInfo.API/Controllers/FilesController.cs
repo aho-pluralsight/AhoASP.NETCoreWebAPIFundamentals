@@ -29,7 +29,11 @@ namespace Ch06.Aho.CityInfo.API.Controllers
         /// </summary>
         /// <param name="id">File Id</param>
         /// <returns>A file</returns>
+        /// <response code="200">Returns the requested file</response>
+        /// <response code="404">Pas aujourd'hui !</response>
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult GetFile(int id)
         {
             var file = GetLocalFile(id);
@@ -53,7 +57,13 @@ namespace Ch06.Aho.CityInfo.API.Controllers
         /// </summary>
         /// <param name="file">The file to load</param>
         /// <returns>Nothing</returns>
+        /// <response code="200">Returns the requested city</response>
+        /// <response code="400">Bad request yo !</response>
+        /// <response code="404">Pas aujourd'hui !</response>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> UploadFile(IFormFile file)
         {
             if (file.Length == 0 || file.Length > 20971520 || file.ContentType != "application/pdf")
