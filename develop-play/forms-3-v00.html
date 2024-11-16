@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three Forms Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Forms with Buttons</h1>
+
+    <!-- First Group -->
+    <div class="form-group">
+        <input type="text" name="first_form_field1" placeholder="Field 1">
+        <input type="text" name="first_form_field2" placeholder="Field 2">
+        <form action="/submit-first" method="post">
+            <input type="submit" value="Submit Form 1">
+        </form>
+    </div>
+
+    <!-- Second Group -->
+    <div class="form-group">
+        <input type="text" name="second_form_field1" placeholder="Field 1">
+        <input type="text" name="second_form_field2" placeholder="Field 2">
+        <form action="/submit-second" method="post">
+            <input type="submit" value="Submit Form 2">
+        </form>
+    </div>
+
+    <!-- Third Group -->
+    <div class="form-group">
+        <input type="text" name="third_form_field1" placeholder="Field 1">
+        <input type="text" name="third_form_field2" placeholder="Field 2">
+        <form action="/submit-third" method="post">
+            <input type="submit" value="Submit Form 3">
+        </form>
+    </div>
+</body>
+</html>
