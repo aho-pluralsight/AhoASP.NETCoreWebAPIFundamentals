@@ -44,6 +44,11 @@ app.Use(async (context, next) =>
         string execDir = AppDomain.CurrentDomain.BaseDirectory;
         await context.Response.WriteAsync(System.IO.File.ReadAllText($"{execDir}\\views\\forms3v00.html"));
     }
+    else if (context.Request.Path.Value == "/forms3v1")
+    {
+        string execDir = AppDomain.CurrentDomain.BaseDirectory;
+        await context.Response.WriteAsync(System.IO.File.ReadAllText($"{execDir}\\views\\forms3v01.html"));
+    }
     else if (context.Request.Path.Value.StartsWith("/submit-"))
     {
         var test = context.Request.ReadFormAsync();

@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <None Remove="scripts\aho.css" />
+    <None Remove="views\forms3v01.html" />
   </ItemGroup>
 
 </Project>
