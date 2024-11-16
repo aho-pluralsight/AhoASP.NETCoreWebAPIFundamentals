@@ -38,6 +38,11 @@ app.Use(async (context, next) =>
         string execDir = AppDomain.CurrentDomain.BaseDirectory;
         await context.Response.WriteAsync(System.IO.File.ReadAllText($"{execDir}\\scripts\\aho.css"));
     }
+    else if (context.Request.Path.Value == "/forms3v0")
+    {
+        string execDir = AppDomain.CurrentDomain.BaseDirectory;
+        await context.Response.WriteAsync(System.IO.File.ReadAllText($"{execDir}\\views\\forms3v00.html"));
+    }
     else
     {
         await next(context);
