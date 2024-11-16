@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
 using System.Reflection;
@@ -42,6 +43,11 @@ app.Use(async (context, next) =>
     {
         string execDir = AppDomain.CurrentDomain.BaseDirectory;
         await context.Response.WriteAsync(System.IO.File.ReadAllText($"{execDir}\\views\\forms3v00.html"));
+    }
+    else if (context.Request.Path.Value.StartsWith("/submit-"))
+    {
+        var test = context.Request.ReadFormAsync();
+        await context.Response.WriteAsync(context.Request.ReadFormAsync().ToString());
     }
     else
     {
