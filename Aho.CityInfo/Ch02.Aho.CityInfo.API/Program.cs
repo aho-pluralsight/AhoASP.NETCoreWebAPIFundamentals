@@ -1,3 +1,4 @@
+using Ch02.Aho.CityInfo.API.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
@@ -49,10 +50,17 @@ app.Use(async (context, next) =>
         string execDir = AppDomain.CurrentDomain.BaseDirectory;
         await context.Response.WriteAsync(System.IO.File.ReadAllText($"{execDir}\\views\\forms3v01.html"));
     }
-    else if (context.Request.Path.Value.StartsWith("/submit-"))
+    else if (context.Request.Path.Value == "/forms3v2")
     {
-        var test = context.Request.ReadFormAsync();
-        await context.Response.WriteAsync(context.Request.ReadFormAsync().ToString());
+        string execDir = AppDomain.CurrentDomain.BaseDirectory;
+        await context.Response.WriteAsync(System.IO.File.ReadAllText($"{execDir}\\views\\forms3v02.html"));
+    }
+    else if (context.Request.Path.Value.StartsWith("/forms3"))
+    {
+        using var reader = new StreamReader(context.Request.Body);
+        var body = await reader.ReadToEndAsync();
+        context.Response.ContentType = "application/json";
+        await context.Response.WriteAsync(body);
     }
     else
     {

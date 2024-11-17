@@ -1,0 +1,97 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forms with JSON</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Forms Posting JSON</h1>
+
+    <!-- First Group -->
+    <div class="form-group">
+        <input type="text" name="first_form_field1" placeholder="Field 1" form="form1">
+        <input type="text" name="first_form_field2" placeholder="Field 2" form="form1">
+        <input type="submit" value="Submit Form 1" form="form1">
+    </div>
+
+    <!-- Second Group -->
+    <div class="form-group">
+        <input type="text" name="second_form_field1" placeholder="Field 1" form="form2">
+        <input type="text" name="second_form_field2" placeholder="Field 2" form="form2">
+        <input type="submit" value="Submit Form 2" form="form2">
+    </div>
+
+    <!-- Third Group -->
+    <div class="form-group">
+        <input type="text" name="third_form_field1" placeholder="Field 1" form="form3">
+        <input type="text" name="third_form_field2" placeholder="Field 2" form="form3">
+        <input type="submit" value="Submit Form 3" form="form3">
+    </div>
+
+    <!-- Forms at the Bottom -->
+    <form id="form1" action="forms3/submit-first" method="post"></form>
+    <form id="form2" action="forms3/submit-second" method="post"></form>
+    <form id="form3" action="forms3/submit-third" method="post"></form>
+
+    <script>
+        // Intercept all form submissions
+        document.querySelectorAll("form").forEach(form => {
+            console.log("AHR *** 000000");
+            console.log(form);
+            form.addEventListener("submit", function (event) {
+                console.log("AHR *** 00");
+                event.preventDefault(); // Stop the form's default submit behavior
+                console.log("AHR *** 01");
+                console.log(form);
+                console.log("AHR *** 02");
+
+                // Gather data from the associated form inputs
+                const formData = new FormData(form);
+                console.log("AHR *** 03");
+                console.log(formData);
+                console.log("AHR *** 04");
+                const jsonData = {};
+                formData.forEach((value, key) => {
+                    console.log("AHR ---");
+                    console.log(key + ' : ' + value);
+                    jsonData[key] = value;
+                });
+                console.log("AHR *** 05");
+                console.log(jsonData);
+                console.log("AHR *** 06");
+
+                // Post the JSON data
+                fetch(form.action, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(jsonData)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("%cForm submitted successfully:\n" + "Body:\n" + JSON.stringify(data, null, 4), 'color: yellow; font-size: 20px;');
+                    })
+                    .catch(error => {
+                        console.error("Error submitting form:", error);
+                    });
+            });
+        });
+    </script>
+</body>
+</html>
