@@ -1,0 +1,53 @@
+
+old
+remote add origin https://github.com/AhoPluralSight/AhoASP.NETCoreWebAPIFundamentals.git
+new
+https://github.com/aho-pluralsight/AhoASP.NETCoreWebAPIFundamentals.git
+
+
+Ch02.Aho.CityInfo.API.csproj
+Aho.CityInfo.sln
+
+https://github.com/login
+
+New SLN
+-------
+dotnet new sln --output Aho.CityInfo
+New PROJ
+--------
+dotnet new webapi --dry-run -controllers -o Aho.CityInfo\Ch02.Aho.CityInfo.API
+dotnet new webapi -controllers -o Aho.CityInfo\Ch02.Aho.CityInfo.API
+Attach the new PROJ to the SLN
+------------------------------
+dotnet sln [<SOLUTION_FILE>] add [--in-root] [-s|--solution-folder <PATH>] <PROJECT_PATH> [<PROJECT_PATH>...]
+dotnet sln add [-h|--help]
+dotnet sln Aho.CityInfo\Aho.CityInfo.sln add --solution-folder 01.APIs Aho.CityInfo\Ch02.Aho.CityInfo.API
+
+https://stackoverflow.com/questions/73640728/why-again-simply-empty-app-run-does-we-need
+
+Ch02.Aho.CityInfo.API
+Aho.CityInfo.sln
+
+Add-Migration DbAhoCityInfoInitialDataSeeding
+Remove-Migration
+{EnvironmentVariablesConfigurationProvider Prefix: 'ASPNETCORE_'}
+ASPNETCORE_
+
+---
+        /// <response code="200">Returns the requested city</response>
+        /// <response code="403">You don't have permission man</response>
+        /// <response code="404">Pas aujourd'hui !</response>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+---
+
+---
+        /// <response code="200">Returns the requested city</response>
+        /// <response code="400">Bad request yo !</response>
+        /// <response code="404">Pas aujourd'hui !</response>
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+---
